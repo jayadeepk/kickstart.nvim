@@ -818,7 +818,18 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      statusline.setup { 
+        use_icons = vim.g.have_nerd_font,
+        content = {
+          inactive = function()
+            -- Custom inactive window content that hides term:// for terminal buffers
+            if vim.api.nvim_get_option_value('buftype', { buf = 0 }) == 'terminal' then
+              return '%#MiniStatuslineInactive#%='
+            end
+            return '%#MiniStatuslineInactive#%F%='
+          end
+        }
+      }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -826,6 +837,16 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
+      end
+
+      -- Hide terminal buffer names (term://) in statusline for active windows
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_filename = function(args)
+        local buf_id = args and args.buf_id or 0
+        if vim.api.nvim_get_option_value('buftype', { buf = buf_id }) == 'terminal' then
+          return ''
+        end
+        return vim.fn.expand(buf_id == 0 and '%:t' or '#' .. buf_id .. ':t')
       end
 
       -- ... and there is more!
