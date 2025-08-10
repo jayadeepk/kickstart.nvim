@@ -31,8 +31,13 @@ vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the ri
 -- Open terminal in vertical split and switch to insert mode
 vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
 
--- Open terminal in vertical split and run claude command
-vim.keymap.set('n', '<C-Space>', '<cmd>vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions<CR>i', { desc = 'Open claude in vertical split' })
+-- Open terminal in vertical split and run claude command, then horizontal split with normal terminal
+vim.keymap.set('n', '<C-Space>', function()
+  vim.cmd('vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions')
+  vim.cmd('split | terminal')
+  vim.cmd('wincmd k')  -- Move focus back up to claude terminal
+  vim.cmd('startinsert')
+end, { desc = 'Open claude in vertical split with normal terminal below' })
 
 -- Window resizing with Ctrl + arrow keys
 vim.keymap.set('n', '<C-Left>', '<C-w><', { desc = 'Decrease window width' })
