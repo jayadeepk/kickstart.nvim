@@ -33,10 +33,14 @@ vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open termi
 
 -- Open terminal in vertical split and run claude command, then horizontal split with normal terminal
 vim.keymap.set('n', '<C-Space>', function()
-  vim.cmd('vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions')
-  vim.cmd('split | terminal')
-  vim.cmd('wincmd k')  -- Move focus back up to claude terminal
-  vim.cmd('startinsert')
+  vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+  -- Resize vertical split: left 60%, right 40%
+  vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.4))
+  vim.cmd 'split | terminal'
+  -- Resize horizontal split: top 60%, bottom 40%
+  vim.cmd('resize ' .. math.floor(vim.o.lines * 0.2))
+  vim.cmd 'wincmd k' -- Move focus back up to claude terminal
+  vim.cmd 'startinsert'
 end, { desc = 'Open claude in vertical split with normal terminal below' })
 
 -- Window resizing with Ctrl + arrow keys
