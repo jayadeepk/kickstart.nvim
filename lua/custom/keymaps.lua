@@ -33,3 +33,9 @@ vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open termi
 
 -- Open terminal in vertical split and run claude command
 vim.keymap.set('n', '<C-Space>', '<cmd>vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions<CR>i', { desc = 'Open claude in vertical split' })
+
+-- Window resizing with Ctrl + arrow keys
+vim.keymap.set('n', '<C-Left>', '<C-w><', { desc = 'Decrease window width' })
+vim.keymap.set('n', '<C-Right>', '<C-w>>', { desc = 'Increase window width' })
+vim.keymap.set('n', '<C-Up>', '<C-w>+', { desc = 'Increase window height' })
+vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
