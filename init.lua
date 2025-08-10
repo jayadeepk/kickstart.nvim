@@ -119,11 +119,6 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move focus to the lo
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the upper window from terminal' })
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window from terminal' })
 
--- Open terminal in vertical split and switch to insert mode
-vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
-
--- Open terminal in vertical split and run claude command
-vim.keymap.set('n', '<C-Space>', '<cmd>vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions<CR>i', { desc = 'Open claude in vertical split' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -937,6 +932,9 @@ require('lazy').setup({
     },
   },
 })
+
+-- Load custom keymaps
+require('custom.keymaps')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
