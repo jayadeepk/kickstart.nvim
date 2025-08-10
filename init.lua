@@ -113,6 +113,30 @@ vim.api.nvim_create_autocmd('BufEnter', {
   desc = 'Auto enter insert mode when focusing terminal'
 })
 
+-- Run the <C-Space> terminal setup at startup
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    -- Only run if no files were passed as arguments
+    if vim.fn.argc() == 0 then
+      vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+      -- Resize vertical split: left 60%, right 40%
+      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.4))
+      vim.cmd 'split | terminal'
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+      -- Resize horizontal split: top 60%, bottom 40%
+      vim.cmd('resize ' .. math.floor(vim.o.lines * 0.2))
+      vim.cmd 'wincmd k' -- Move focus back up to claude terminal
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+      vim.cmd 'startinsert'
+    end
+  end,
+  desc = 'Auto-open claude terminal setup on startup'
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
