@@ -807,6 +807,7 @@ require('lazy').setup({
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
+        dim_inactive = true, -- Dim inactive windows
       }
 
       -- Load the colorscheme here.
