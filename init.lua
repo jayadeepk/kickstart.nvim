@@ -109,6 +109,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = 'term://*',
   callback = function()
     vim.cmd('startinsert')
+    vim.wo.signcolumn = 'no'
   end,
   desc = 'Auto enter insert mode when focusing terminal'
 })
@@ -121,16 +122,19 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
       vim.wo.relativenumber = false
+      vim.wo.signcolumn = 'no'
       -- Resize vertical split: left 60%, right 40%
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.4))
       vim.cmd 'split | terminal'
       vim.wo.number = false
       vim.wo.relativenumber = false
+      vim.wo.signcolumn = 'no'
       -- Resize horizontal split: top 60%, bottom 40%
       vim.cmd('resize ' .. math.floor(vim.o.lines * 0.2))
       vim.cmd 'wincmd k' -- Move focus back up to claude terminal
       vim.wo.number = false
       vim.wo.relativenumber = false
+      vim.wo.signcolumn = 'no'
       vim.cmd 'startinsert'
     end
   end,
