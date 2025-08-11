@@ -37,6 +37,7 @@ return {
         -- Set colorscheme based on Windows theme
         if windows_theme == 'light' then
           vim.cmd.colorscheme 'tokyonight-day'
+          
           -- Fix cursor colors for light mode
           vim.cmd [[
             highlight Cursor guifg=white guibg=black
@@ -44,12 +45,43 @@ return {
             highlight CursorLine guibg=#e9e9ec
             highlight Visual guibg=#c8c8ce
           ]]
+          
+          -- Make statusline blend with window background in light mode
+          vim.cmd [[
+            highlight StatusLine guifg=#3760bf guibg=#e1e2e7 gui=NONE
+            highlight StatusLineNC guifg=#8990b3 guibg=#d0d5e3 gui=NONE
+            highlight MiniStatuslineFilename guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineInactive guifg=#8990b3 guibg=#d0d5e3
+            highlight MiniStatuslineDevinfo guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeNormal guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeInsert guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeVisual guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeReplace guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeCommand guifg=#3760bf guibg=#e1e2e7
+            highlight MiniStatuslineModeOther guifg=#3760bf guibg=#e1e2e7
+          ]]
         else
           vim.cmd.colorscheme 'tokyonight-night'
+          
           -- Reset cursor colors for dark mode (theme defaults are usually fine)
           vim.cmd [[
             highlight Cursor guifg=black guibg=white
             highlight iCursor guifg=black guibg=white
+          ]]
+          
+          -- Make statusline blend with window background in dark mode
+          vim.cmd [[
+            highlight StatusLine guifg=#7aa2f7 guibg=#1a1b26 gui=NONE
+            highlight StatusLineNC guifg=#565f89 guibg=#16161e gui=NONE
+            highlight MiniStatuslineFilename guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineInactive guifg=#565f89 guibg=#16161e
+            highlight MiniStatuslineDevinfo guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeNormal guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeInsert guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeVisual guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeReplace guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeCommand guifg=#7aa2f7 guibg=#1a1b26
+            highlight MiniStatuslineModeOther guifg=#7aa2f7 guibg=#1a1b26
           ]]
         end
         
