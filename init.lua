@@ -847,6 +847,78 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
+      -- Configure statusline background to match editor background
+      local function update_statusline_colors()
+        -- Try multiple approaches to get the right background color
+        local normal_hl = vim.api.nvim_get_hl(0, { name = 'Normal' })
+        local bg_color = normal_hl.bg
+        local fg_color = normal_hl.fg
+        
+        -- If Normal doesn't have explicit colors, try to get them from other sources
+        if not bg_color then
+          -- Try to get background from other highlight groups or use none for transparency
+          local alt_groups = { 'NormalFloat', 'SignColumn', 'LineNr' }
+          for _, group in ipairs(alt_groups) do
+            local hl = vim.api.nvim_get_hl(0, { name = group })
+            if hl.bg then
+              bg_color = hl.bg
+              break
+            end
+          end
+        end
+        
+        if not fg_color then
+          -- Get foreground from text-based highlight groups
+          local text_groups = { 'Normal', 'LineNr', 'Comment' }
+          for _, group in ipairs(text_groups) do
+            local hl = vim.api.nvim_get_hl(0, { name = group })
+            if hl.fg then
+              fg_color = hl.fg
+              break
+            end
+          end
+        end
+        
+        -- Set all statusline highlights to use editor colors or clear them for transparency
+        local statusline_groups = {
+          'MiniStatuslineDevinfo',
+          'MiniStatuslineFileinfo', 
+          'MiniStatuslineFilename',
+          'MiniStatuslineInactive',
+          'MiniStatuslineModeCommand',
+          'MiniStatuslineModeInsert',
+          'MiniStatuslineModeNormal',
+          'MiniStatuslineModeOther',
+          'MiniStatuslineModeReplace',
+          'MiniStatuslineModeVisual'
+        }
+        
+        for _, group in ipairs(statusline_groups) do
+          -- Use NONE for transparent background if we can't detect the color
+          vim.api.nvim_set_hl(0, group, { 
+            bg = bg_color or 'NONE',
+            fg = fg_color or 'NONE'
+          })
+        end
+      end
+
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = update_statusline_colors,
+        desc = 'Set statusline background to match editor background'
+      })
+
+      -- Apply the configuration immediately and also on VimEnter for better timing
+      vim.api.nvim_create_autocmd('VimEnter', {
+        callback = function()
+          vim.schedule(function()
+            vim.defer_fn(update_statusline_colors, 100)
+          end)
+        end,
+        desc = 'Apply statusline colors on startup'
+      })
+      
+      vim.schedule(update_statusline_colors)
+
       -- Hide terminal buffer names (term://) in statusline for active windows
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_filename = function(args)
