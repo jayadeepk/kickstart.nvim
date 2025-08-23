@@ -919,6 +919,52 @@ require('lazy').setup({
       
       vim.schedule(update_statusline_colors)
 
+      -- Configure window separator lines with subtle gray colors
+      local function update_separator_colors()
+        local normal_bg = vim.api.nvim_get_hl(0, { name = 'Normal' }).bg or 0
+        
+        -- Determine if we're in light or dark mode based on background
+        local is_dark_mode = true
+        if normal_bg then
+          -- Convert hex to RGB and calculate luminance to detect light/dark
+          local r = bit.rshift(bit.band(normal_bg, 0xFF0000), 16)
+          local g = bit.rshift(bit.band(normal_bg, 0x00FF00), 8)
+          local b = bit.band(normal_bg, 0x0000FF)
+          local luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+          is_dark_mode = luminance < 0.5
+        end
+        
+        -- Set very subtle gray colors for window separators
+        local separator_color
+        if is_dark_mode then
+          separator_color = 0x333333  -- Very subtle gray for dark mode
+        else
+          separator_color = 0xB0B0B0  -- Slightly more contrast for light mode
+        end
+        
+        -- Apply to window separator highlight groups
+        vim.api.nvim_set_hl(0, 'WinSeparator', { fg = separator_color })
+        vim.api.nvim_set_hl(0, 'VertSplit', { fg = separator_color })
+      end
+
+      -- Update separator colors when colorscheme changes
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = update_separator_colors,
+        desc = 'Set window separator colors to subtle gray'
+      })
+
+      -- Apply separator colors on startup
+      vim.api.nvim_create_autocmd('VimEnter', {
+        callback = function()
+          vim.schedule(function()
+            vim.defer_fn(update_separator_colors, 100)
+          end)
+        end,
+        desc = 'Apply separator colors on startup'
+      })
+      
+      vim.schedule(update_separator_colors)
+
       -- Hide terminal buffer names (term://) in statusline for active windows
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_filename = function(args)
