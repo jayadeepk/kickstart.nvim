@@ -775,24 +775,8 @@ require('lazy').setup({
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
-      -- Function to set Tokyo Night variant based on background
-      local function set_tokyonight_variant()
-        if vim.o.background == 'light' then
-          vim.cmd.colorscheme 'tokyonight-day'
-        else
-          vim.cmd.colorscheme 'tokyonight-night'
-        end
-      end
-
-      -- Set initial colorscheme
-      set_tokyonight_variant()
-
-      -- Create autocommand to switch when background changes
-      vim.api.nvim_create_autocmd('OptionSet', {
-        pattern = 'background',
-        callback = set_tokyonight_variant,
-        desc = 'Switch Tokyo Night variant when background changes',
-      })
+      -- Always use day theme for SSH environment
+      vim.cmd.colorscheme 'tokyonight-day'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
