@@ -29,7 +29,10 @@ vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the up
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window from terminal' })
 
 -- Switch to previous buffer from terminal mode
-vim.keymap.set('t', '<C-6>', '<C-\\><C-n><C-6>', { desc = 'Switch to previous buffer from terminal' })
+vim.keymap.set('t', '<C-^>', function()
+  vim.cmd('stopinsert')
+  vim.cmd('buffer #')
+end, { desc = 'Switch to previous buffer from terminal' })
 
 -- Scroll half page up/down from terminal mode
 vim.keymap.set('t', '<C-u>', '<C-\\><C-n><C-u>', { desc = 'Scroll half page up from terminal' })
