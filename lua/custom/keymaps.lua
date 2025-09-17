@@ -69,3 +69,14 @@ vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
 
 -- Database UI
 vim.keymap.set('n', '<leader>db', function() require("dbee").open() end, { desc = 'Open Database UI' })
+
+-- Toggle diagnostics
+vim.keymap.set('n', '<leader>td', function()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.disable()
+    print("Diagnostics disabled")
+  else
+    vim.diagnostic.enable()
+    print("Diagnostics enabled")
+  end
+end, { desc = '[T]oggle [D]iagnostics' })
