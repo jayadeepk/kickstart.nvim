@@ -63,3 +63,6 @@ vim.keymap.set('n', '<C-Left>', '<C-w><', { desc = 'Decrease window width' })
 vim.keymap.set('n', '<C-Right>', '<C-w>>', { desc = 'Increase window width' })
 vim.keymap.set('n', '<C-Up>', '<C-w>+', { desc = 'Increase window height' })
 vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
+
+-- Database UI
+vim.keymap.set('n', '<leader>db', function() require("dbee").open() end, { desc = 'Open Database UI' })
