@@ -26,6 +26,26 @@ return {
       require("dbee").setup({
         sources = sources,
       })
+      
+      -- Auto-execute queries on save for dbee scratchpads
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = "*.sql",
+        callback = function()
+          -- Check if this is a dbee scratchpad by looking for dbee in the buffer name or filetype
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if bufname:match("dbee") or vim.bo.filetype == "sql" then
+            -- Get the entire buffer content like run_file does
+            local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+            local query = table.concat(lines, "\n")
+            
+            -- Execute the query (equivalent to pressing BB in normal mode)
+            if query and query ~= "" then
+              require("dbee").execute(query)
+            end
+          end
+        end,
+        desc = "Auto-execute dbee queries on save"
+      })
     end,
   },
 }
