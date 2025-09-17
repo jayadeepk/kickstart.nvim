@@ -28,6 +28,21 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move focus to the lo
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the upper window from terminal' })
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window from terminal' })
 
+-- Switch to previous buffer from terminal mode
+vim.keymap.set('t', '<C-6>', '<C-\\><C-n><C-6>', { desc = 'Switch to previous buffer from terminal' })
+
+-- Scroll half page up/down from terminal mode
+vim.keymap.set('t', '<C-u>', '<C-\\><C-n><C-u>', { desc = 'Scroll half page up from terminal' })
+vim.keymap.set('t', '<C-d>', '<C-\\><C-n><C-d>', { desc = 'Scroll half page down from terminal' })
+
+-- File finder from terminal mode
+vim.keymap.set('t', '<C-p>', '<C-\\><C-n><C-p>', { desc = 'Find files from terminal' })
+
+-- Quit all in normal, insert, and terminal modes
+vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>', { desc = 'Quit all' })
+vim.keymap.set('i', '<C-q>', '<Esc><cmd>qa<CR>', { desc = 'Quit all from insert mode' })
+vim.keymap.set('t', '<C-q>', '<C-\\><C-n><cmd>qa<CR>', { desc = 'Quit all from terminal' })
+
 -- Open terminal in vertical split and switch to insert mode
 vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
 
