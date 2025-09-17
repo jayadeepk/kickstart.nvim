@@ -83,7 +83,6 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 -- Basic keymaps are loaded from lua/custom/keymaps.lua
 
-
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -108,10 +107,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('BufEnter', {
   pattern = 'term://*',
   callback = function()
-    vim.cmd('startinsert')
+    vim.cmd 'startinsert'
     vim.wo.signcolumn = 'no'
   end,
-  desc = 'Auto enter insert mode when focusing terminal'
+  desc = 'Auto enter insert mode when focusing terminal',
 })
 
 -- Run the <C-Space> terminal setup at startup
@@ -119,7 +118,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
-      vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+      vim.cmd 'vsplit | terminal source ~/.zshrc && claude --dangerously-skip-permissions'
       vim.wo.number = false
       vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
@@ -128,7 +127,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.cmd 'startinsert'
     end
   end,
-  desc = 'Auto-open claude terminal setup on startup'
+  desc = 'Auto-open claude terminal setup on startup',
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -816,7 +815,7 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { 
+      statusline.setup {
         use_icons = vim.g.have_nerd_font,
         content = {
           inactive = function()
@@ -825,8 +824,8 @@ require('lazy').setup({
               return '%#MiniStatuslineInactive#%='
             end
             return '%#MiniStatuslineInactive#%F%='
-          end
-        }
+          end,
+        },
       }
 
       -- You can configure sections in the statusline by overriding their
@@ -926,7 +925,7 @@ require('lazy').setup({
 })
 
 -- Load custom keymaps
-require('custom.keymaps')
+require 'custom.keymaps'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
