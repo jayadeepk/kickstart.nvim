@@ -30,13 +30,12 @@ vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the ri
 
 -- Switch to previous buffer from terminal mode
 vim.keymap.set('t', '<C-^>', function()
-  vim.cmd('stopinsert')
-  vim.cmd('buffer #')
+  vim.cmd 'stopinsert'
+  vim.cmd 'buffer #'
 end, { desc = 'Switch to previous buffer from terminal' })
 
 -- Scroll half page up/down from terminal mode
 vim.keymap.set('t', '<C-u>', '<C-\\><C-n><C-u>', { desc = 'Scroll half page up from terminal' })
-vim.keymap.set('t', '<C-d>', '<C-\\><C-n><C-d>', { desc = 'Scroll half page down from terminal' })
 
 -- File finder from terminal mode
 vim.keymap.set('t', '<C-p>', '<C-\\><C-n><C-p>', { desc = 'Find files from terminal' })
@@ -68,15 +67,17 @@ vim.keymap.set('n', '<C-Up>', '<C-w>+', { desc = 'Increase window height' })
 vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
 
 -- Database UI
-vim.keymap.set('n', '<leader>db', function() require("dbee").open() end, { desc = 'Open Database UI' })
+vim.keymap.set('n', '<leader>db', function()
+  require('dbee').open()
+end, { desc = 'Open Database UI' })
 
 -- Toggle diagnostics
 vim.keymap.set('n', '<leader>td', function()
   if vim.diagnostic.is_enabled() then
     vim.diagnostic.disable()
-    print("Diagnostics disabled")
+    print 'Diagnostics disabled'
   else
     vim.diagnostic.enable()
-    print("Diagnostics enabled")
+    print 'Diagnostics enabled'
   end
 end, { desc = '[T]oggle [D]iagnostics' })
