@@ -66,6 +66,10 @@ vim.keymap.set('n', '<C-Right>', '<C-w>>', { desc = 'Increase window width' })
 vim.keymap.set('n', '<C-Up>', '<C-w>+', { desc = 'Increase window height' })
 vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
 
+-- Close current buffer with Ctrl+w
+vim.keymap.set('n', '<C-w>', '<cmd>q<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('t', '<C-w>', '<C-\\><C-n><cmd>q<CR>', { desc = 'Close current buffer from terminal' })
+
 -- Database UI
 vim.keymap.set('n', '<leader>db', function()
   require('dbee').open()
