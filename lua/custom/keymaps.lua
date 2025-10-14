@@ -28,6 +28,23 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move focus to the lo
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the upper window from terminal' })
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window from terminal' })
 
+-- Switch to previous buffer from terminal mode
+vim.keymap.set('t', '<C-^>', function()
+  vim.cmd 'stopinsert'
+  vim.cmd 'buffer #'
+end, { desc = 'Switch to previous buffer from terminal' })
+
+-- Scroll half page up/down from terminal mode
+vim.keymap.set('t', '<C-u>', '<C-\\><C-n><C-u>', { desc = 'Scroll half page up from terminal' })
+
+-- File finder from terminal mode
+vim.keymap.set('t', '<C-p>', '<C-\\><C-n><C-p>', { desc = 'Find files from terminal' })
+
+-- Quit all in normal, insert, and terminal modes
+vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>', { desc = 'Quit all' })
+vim.keymap.set('i', '<C-q>', '<Esc><cmd>qa<CR>', { desc = 'Quit all from insert mode' })
+vim.keymap.set('t', '<C-q>', '<C-\\><C-n><cmd>qa<CR>', { desc = 'Quit all from terminal' })
+
 -- Open terminal in vertical split and switch to insert mode
 vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
 
@@ -48,6 +65,26 @@ vim.keymap.set('n', '<C-Left>', '<C-w><', { desc = 'Decrease window width' })
 vim.keymap.set('n', '<C-Right>', '<C-w>>', { desc = 'Increase window width' })
 vim.keymap.set('n', '<C-Up>', '<C-w>+', { desc = 'Increase window height' })
 vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
+
+-- Close current buffer with Ctrl+w
+vim.keymap.set('n', '<C-w>', '<cmd>q<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('t', '<C-w>', '<C-\\><C-n><cmd>q<CR>', { desc = 'Close current buffer from terminal' })
+
+-- Database UI
+vim.keymap.set('n', '<leader>db', function()
+  require('dbee').open()
+end, { desc = 'Open Database UI' })
+
+-- Toggle diagnostics
+vim.keymap.set('n', '<leader>td', function()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.disable()
+    print 'Diagnostics disabled'
+  else
+    vim.diagnostic.enable()
+    print 'Diagnostics enabled'
+  end
+end, { desc = '[T]oggle [D]iagnostics' })
 
 -- Toggle between light and dark mode
 vim.keymap.set('n', '<leader>tt', function()
