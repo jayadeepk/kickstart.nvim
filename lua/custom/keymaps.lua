@@ -85,3 +85,12 @@ vim.keymap.set('n', '<leader>td', function()
     print 'Diagnostics enabled'
   end
 end, { desc = '[T]oggle [D]iagnostics' })
+
+-- Toggle between light and dark mode
+vim.keymap.set('n', '<leader>tt', function()
+  if vim.o.background == 'dark' then
+    vim.o.background = 'light'
+  else
+    vim.o.background = 'dark'
+  end
+end, { desc = '[T]oggle [T]heme (light/dark mode)' })
