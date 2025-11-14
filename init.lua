@@ -38,6 +38,11 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Set tabs to 2 spaces
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+
 -- Save undo history
 vim.o.undofile = true
 
