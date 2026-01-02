@@ -94,3 +94,19 @@ vim.keymap.set('n', '<leader>tt', function()
     vim.o.background = 'dark'
   end
 end, { desc = '[T]oggle [T]heme (light/dark mode)' })
+
+-- Copy relative file path to clipboard
+vim.keymap.set('n', '<leader>cp', function()
+  local file_path = vim.fn.expand '%:p'
+  local cwd = vim.fn.getcwd()
+  local relative_path
+
+  if file_path:sub(1, #cwd) == cwd then
+    relative_path = file_path:sub(#cwd + 2)
+  else
+    relative_path = file_path
+  end
+
+  vim.fn.setreg('+', relative_path)
+  print('Copied: ' .. relative_path)
+end, { desc = '[C]opy relative file [P]ath' })
