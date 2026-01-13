@@ -28,6 +28,17 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move focus to the lo
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the upper window from terminal' })
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window from terminal' })
 
+-- Split with terminal
+vim.keymap.set('n', '<leader>th', function()
+  vim.cmd 'split | terminal'
+  vim.cmd 'startinsert'
+end, { desc = '[T]erminal [H]orizontal split' })
+
+vim.keymap.set('n', '<leader>tv', function()
+  vim.cmd 'vsplit | terminal'
+  vim.cmd 'startinsert'
+end, { desc = '[T]erminal [V]ertical split' })
+
 -- Switch to previous buffer from terminal mode
 vim.keymap.set('t', '<C-^>', function()
   vim.cmd 'stopinsert'
@@ -38,7 +49,10 @@ end, { desc = 'Switch to previous buffer from terminal' })
 vim.keymap.set('t', '<C-u>', '<C-\\><C-n><C-u>', { desc = 'Scroll half page up from terminal' })
 
 -- File finder from terminal mode
-vim.keymap.set('t', '<C-p>', '<C-\\><C-n><C-p>', { desc = 'Find files from terminal' })
+vim.keymap.set('t', '<C-p>', function()
+  vim.cmd 'stopinsert'
+  require('telescope.builtin').find_files()
+end, { desc = 'Find files from terminal' })
 
 -- Quit all in normal, insert, and terminal modes
 vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>', { desc = 'Quit all' })
