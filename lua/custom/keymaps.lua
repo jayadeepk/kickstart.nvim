@@ -137,10 +137,10 @@ vim.keymap.set('n', '<C-Down>', '<C-w>-', { desc = 'Decrease window height' })
 vim.keymap.set('n', '<C-w>', '<cmd>q<CR>', { desc = 'Close current buffer' })
 vim.keymap.set('t', '<C-w>', '<C-\\><C-n><cmd>q<CR>', { desc = 'Close current buffer from terminal' })
 
--- Database UI
-vim.keymap.set('n', '<leader>db', function()
-  require('dbee').open()
-end, { desc = 'Open Database UI' })
+-- Database UI (vim-dadbod)
+vim.keymap.set('n', '<leader>db', '<cmd>DBUIToggle<CR>', { desc = '[D]atabase [B]rowser toggle' })
+vim.keymap.set('n', '<leader>da', '<cmd>DBUIAddConnection<CR>', { desc = '[D]atabase [A]dd connection' })
+vim.keymap.set('n', '<leader>df', '<cmd>DBUIFindBuffer<CR>', { desc = '[D]atabase [F]ind buffer' })
 
 -- Toggle diagnostics
 vim.keymap.set('n', '<leader>td', function()
