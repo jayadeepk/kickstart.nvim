@@ -119,9 +119,23 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = 'term://*',
   callback = function()
     vim.cmd 'startinsert'
+    vim.wo.number = false
+    vim.wo.relativenumber = false
     vim.wo.signcolumn = 'no'
   end,
   desc = 'Auto enter insert mode when focusing terminal',
+})
+
+-- Re-enable line numbers and signcolumn for non-terminal buffers
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.wo.number = true
+      vim.wo.signcolumn = 'yes'
+    end
+  end,
+  desc = 'Enable line numbers for non-terminal buffers',
 })
 
 -- Run the <C-Space> terminal setup at startup
@@ -129,13 +143,20 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
-      vim.cmd 'vsplit | terminal source ~/.zshrc && claude --dangerously-skip-permissions'
+      -- Create left terminal
+      vim.cmd 'terminal'
       vim.wo.number = false
-      vim.wo.relativenumber = false
+      vim.wo.signcolumn = 'no'
+      -- Split to the right and create claude terminal
+      vim.cmd 'vsplit'
+      vim.cmd 'terminal source ~/.zshrc && claude --dangerously-skip-permissions'
+      vim.wo.number = false
       vim.wo.signcolumn = 'no'
       -- Resize vertical split: left 50%, right 50%
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
+      -- Move back to left window for focus
+      vim.cmd 'wincmd h'
     end
   end,
   desc = 'Auto-open claude terminal setup on startup',
