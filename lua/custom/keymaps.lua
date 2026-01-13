@@ -110,3 +110,41 @@ vim.keymap.set('n', '<leader>cp', function()
   vim.fn.setreg('+', relative_path)
   print('Copied: ' .. relative_path)
 end, { desc = '[C]opy relative file [P]ath' })
+
+-- Send current relative file path to Claude Code terminal
+vim.keymap.set('n', '<leader>cl', function()
+  local file_path = vim.fn.expand '%:p'
+  local cwd = vim.fn.getcwd()
+  local relative_path
+
+  if file_path:sub(1, #cwd) == cwd then
+    relative_path = file_path:sub(#cwd + 2)
+  else
+    relative_path = file_path
+  end
+
+  local text = ' @' .. relative_path .. ' '
+
+  -- Find Claude terminal buffer
+  local terminal_found = false
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(buf) then
+      local buf_name = vim.api.nvim_buf_get_name(buf)
+      -- Look for Claude terminal (contains both "term://" and "claude")
+      if buf_name:match 'term://' and buf_name:match 'claude' then
+        -- Get the channel ID for the terminal
+        local channel = vim.api.nvim_buf_get_option(buf, 'channel')
+        if channel and channel ~= 0 then
+          vim.fn.chansend(channel, text)
+          print('Sent to Claude: ' .. text)
+          terminal_found = true
+          break
+        end
+      end
+    end
+  end
+
+  if not terminal_found then
+    print 'Claude terminal not found'
+  end
+end, { desc = '[C]laude send relative file path' })
