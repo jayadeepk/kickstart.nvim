@@ -45,8 +45,9 @@ vim.keymap.set('n', '<C-q>', '<cmd>qa<CR>', { desc = 'Quit all' })
 vim.keymap.set('i', '<C-q>', '<Esc><cmd>qa<CR>', { desc = 'Quit all from insert mode' })
 vim.keymap.set('t', '<C-q>', '<C-\\><C-n><cmd>qa<CR>', { desc = 'Quit all from terminal' })
 
--- Open terminal in vertical split and switch to insert mode
-vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
+-- Open terminal in current buffer and switch to insert mode
+vim.keymap.set('n', '<C-t>', '<cmd>terminal<CR>i', { desc = 'Open terminal in current buffer and enter insert mode' })
+vim.keymap.set('t', '<C-t>', '<C-\\><C-n><cmd>terminal<CR>i', { desc = 'Open terminal in current buffer from terminal mode' })
 
 -- Open terminal in vertical split and run claude command, then horizontal split with normal terminal
 vim.keymap.set('n', '<C-Space>', function()
