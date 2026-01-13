@@ -39,6 +39,58 @@ vim.keymap.set('n', '<leader>tv', function()
   vim.cmd 'startinsert'
 end, { desc = '[T]erminal [V]ertical split' })
 
+-- Terminal in direction (hjkl)
+local function open_terminal_left()
+  vim.cmd 'leftabove vsplit'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end
+
+local function open_terminal_right()
+  vim.cmd 'rightbelow vsplit'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end
+
+local function open_terminal_up()
+  vim.cmd 'aboveleft split'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end
+
+local function open_terminal_down()
+  vim.cmd 'rightbelow split'
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
+end
+
+-- Normal mode
+vim.keymap.set('n', '<M-h>', open_terminal_left, { desc = 'Open terminal in left split' })
+vim.keymap.set('n', '<M-l>', open_terminal_right, { desc = 'Open terminal in right split' })
+vim.keymap.set('n', '<M-k>', open_terminal_up, { desc = 'Open terminal in upper split' })
+vim.keymap.set('n', '<M-j>', open_terminal_down, { desc = 'Open terminal in lower split' })
+
+-- Terminal mode
+vim.keymap.set('t', '<M-h>', function()
+  vim.cmd 'stopinsert'
+  open_terminal_left()
+end, { desc = 'Open terminal in left split' })
+
+vim.keymap.set('t', '<M-l>', function()
+  vim.cmd 'stopinsert'
+  open_terminal_right()
+end, { desc = 'Open terminal in right split' })
+
+vim.keymap.set('t', '<M-k>', function()
+  vim.cmd 'stopinsert'
+  open_terminal_up()
+end, { desc = 'Open terminal in upper split' })
+
+vim.keymap.set('t', '<M-j>', function()
+  vim.cmd 'stopinsert'
+  open_terminal_down()
+end, { desc = 'Open terminal in lower split' })
+
 -- Switch to previous buffer from terminal mode
 vim.keymap.set('t', '<C-^>', function()
   vim.cmd 'stopinsert'
