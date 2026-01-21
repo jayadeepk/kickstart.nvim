@@ -99,6 +99,9 @@ vim.o.foldenable = false -- Start with folds open
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Enable automatic file reading when changed outside Neovim
+vim.o.autoread = true
+
 -- [[ Basic Keymaps ]]
 -- Basic keymaps are loaded from lua/custom/keymaps.lua
 
@@ -144,6 +147,43 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end
   end,
   desc = 'Enable line numbers for non-terminal buffers',
+})
+
+-- Auto-reload files when they change externally (for Claude Code integration)
+local autoreload_group = vim.api.nvim_create_augroup('kickstart-autoreload', { clear = true })
+
+-- Check for file changes when switching windows or buffers
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  group = autoreload_group,
+  callback = function()
+    -- Only check for non-terminal buffers
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.cmd('checktime')
+    end
+  end,
+  desc = 'Check for file changes when entering buffer or gaining focus',
+})
+
+-- Handle cursor hold for idle detection
+vim.api.nvim_create_autocmd('CursorHold', {
+  group = autoreload_group,
+  callback = function()
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.cmd('checktime')
+    end
+  end,
+  desc = 'Check for file changes after cursor idle time',
+})
+
+-- Silent auto-reload: suppress FileChangedShell prompt
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  group = autoreload_group,
+  callback = function()
+    vim.notify('File reloaded: ' .. vim.fn.expand('%:t'), vim.log.levels.INFO)
+  end,
+  desc = 'Notify after file is reloaded',
 })
 
 -- Run the <C-Space> terminal setup at startup
