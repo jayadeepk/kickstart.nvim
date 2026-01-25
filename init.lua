@@ -126,6 +126,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   callback = function()
     vim.cmd('startinsert')
     vim.wo.signcolumn = 'no'
+    vim.wo.list = false
   end,
   desc = 'Auto enter insert mode when focusing terminal'
 })
@@ -140,11 +141,13 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.wo.number = false
       vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
+      vim.wo.list = false
       -- Create vertical split and open claude terminal on the right
       vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
       vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
+      vim.wo.list = false
       -- Resize to 50/50 split
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
