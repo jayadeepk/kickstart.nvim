@@ -135,22 +135,18 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
+      -- Open regular terminal on the left
+      vim.cmd 'terminal'
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+      vim.wo.signcolumn = 'no'
+      -- Create vertical split and open claude terminal on the right
       vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
       vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
-      -- Resize vertical split: left 60%, right 40%
-      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.4))
-      vim.cmd 'split | terminal'
-      vim.wo.number = false
-      vim.wo.relativenumber = false
-      vim.wo.signcolumn = 'no'
-      -- Resize horizontal split: top 60%, bottom 40%
-      vim.cmd('resize ' .. math.floor(vim.o.lines * 0.2))
-      vim.cmd 'wincmd k' -- Move focus back up to claude terminal
-      vim.wo.number = false
-      vim.wo.relativenumber = false
-      vim.wo.signcolumn = 'no'
+      -- Resize to 50/50 split
+      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
     end
   end,
