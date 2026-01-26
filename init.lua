@@ -38,10 +38,13 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
--- Set tabs to 2 spaces
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
+-- Auto indentation settings
+vim.o.autoindent = true
 vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftround = true
 
 -- Save undo history
 vim.o.undofile = true
@@ -96,6 +99,9 @@ vim.o.foldenable = false -- Start with folds open
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Enable automatic file reading when changed outside Neovim
+vim.o.autoread = true
+
 -- [[ Basic Keymaps ]]
 -- Basic keymaps are loaded from lua/custom/keymaps.lua
 
@@ -124,11 +130,61 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('BufEnter', {
   pattern = 'term://*',
   callback = function()
-    vim.cmd('startinsert')
+    vim.cmd 'startinsert'
+    vim.wo.number = false
+    vim.wo.relativenumber = false
     vim.wo.signcolumn = 'no'
-    vim.wo.list = false
   end,
-  desc = 'Auto enter insert mode when focusing terminal'
+  desc = 'Auto enter insert mode when focusing terminal',
+})
+
+-- Re-enable line numbers and signcolumn for non-terminal buffers
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.wo.number = true
+      vim.wo.signcolumn = 'yes'
+    end
+  end,
+  desc = 'Enable line numbers for non-terminal buffers',
+})
+
+-- Auto-reload files when they change externally (for Claude Code integration)
+local autoreload_group = vim.api.nvim_create_augroup('kickstart-autoreload', { clear = true })
+
+-- Check for file changes when switching windows or buffers
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  group = autoreload_group,
+  callback = function()
+    -- Only check for non-terminal buffers
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.cmd('checktime')
+    end
+  end,
+  desc = 'Check for file changes when entering buffer or gaining focus',
+})
+
+-- Handle cursor hold for idle detection
+vim.api.nvim_create_autocmd('CursorHold', {
+  group = autoreload_group,
+  callback = function()
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = 0 })
+    if buftype ~= 'terminal' then
+      vim.cmd('checktime')
+    end
+  end,
+  desc = 'Check for file changes after cursor idle time',
+})
+
+-- Silent auto-reload: suppress FileChangedShell prompt
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  group = autoreload_group,
+  callback = function()
+    vim.notify('File reloaded: ' .. vim.fn.expand('%:t'), vim.log.levels.INFO)
+  end,
+  desc = 'Notify after file is reloaded',
 })
 
 -- Run the <C-Space> terminal setup at startup
@@ -136,24 +192,23 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
-      -- Open regular terminal on the left
+      -- Create left terminal
       vim.cmd 'terminal'
       vim.wo.number = false
-      vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
-      vim.wo.list = false
-      -- Create vertical split and open claude terminal on the right
-      vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+      -- Split to the right and create claude terminal
+      vim.cmd 'vsplit'
+      vim.cmd 'terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
-      vim.wo.relativenumber = false
       vim.wo.signcolumn = 'no'
-      vim.wo.list = false
-      -- Resize to 50/50 split
+      -- Resize vertical split: left 50%, right 50%
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
+      -- Move back to left window for focus
+      vim.cmd 'wincmd h'
     end
   end,
-  desc = 'Auto-open claude terminal setup on startup'
+  desc = 'Auto-open claude terminal setup on startup',
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
