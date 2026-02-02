@@ -204,11 +204,63 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.wo.number = false
       vim.wo.signcolumn = 'no'
       vim.wo.list = false
+      -- Store the Claude terminal buffer and channel
+      local claude_buf = vim.api.nvim_get_current_buf()
+      local claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
       -- Resize vertical split: left 50%, right 50%
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
       -- Move back to left window for focus
       vim.cmd 'wincmd h'
+
+      -- Check for .jira-prompt file and send to Claude terminal
+      local prompt_file = vim.fn.getcwd() .. '/.jira-prompt'
+      if vim.fn.filereadable(prompt_file) == 1 then
+        local function try_send_prompt(attempt)
+          local max_attempts = 5
+          if attempt > max_attempts then
+            print('Failed to send Jira prompt: Claude terminal not ready after ' .. (max_attempts * 5) .. ' seconds')
+            vim.fn.delete(prompt_file)
+            return
+          end
+
+          -- Check if channel is still valid
+          local channel_info = vim.fn.getbufinfo(claude_buf)
+          if #channel_info == 0 or claude_channel == 0 then
+            print('Claude terminal channel not ready, retrying in 5 seconds... (attempt ' .. attempt .. '/' .. max_attempts .. ')')
+            vim.defer_fn(function()
+              try_send_prompt(attempt + 1)
+            end, 5000)
+            return
+          end
+
+          -- Try to send the prompt
+          local prompt = vim.fn.readfile(prompt_file)
+          if #prompt > 0 then
+            local success = pcall(function()
+              vim.fn.chansend(claude_channel, table.concat(prompt, '\n'))
+              vim.fn.chansend(claude_channel, '\n')
+            end)
+
+            if success then
+              print('Jira prompt sent to Claude terminal')
+              vim.fn.delete(prompt_file)
+            else
+              print('Failed to send prompt, retrying in 5 seconds... (attempt ' .. attempt .. '/' .. max_attempts .. ')')
+              vim.defer_fn(function()
+                try_send_prompt(attempt + 1)
+              end, 5000)
+            end
+          else
+            vim.fn.delete(prompt_file)
+          end
+        end
+
+        -- Start trying after 5 seconds
+        vim.defer_fn(function()
+          try_send_prompt(1)
+        end, 5000)
+      end
     end
   end,
   desc = 'Auto-open claude terminal setup on startup',
