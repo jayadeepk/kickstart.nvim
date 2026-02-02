@@ -239,8 +239,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
           local prompt = vim.fn.readfile(prompt_file)
           if #prompt > 0 then
             local success = pcall(function()
-              vim.fn.chansend(claude_channel, table.concat(prompt, '\n'))
-              vim.fn.chansend(claude_channel, '\r')
+              -- Send the prompt text followed by Enter to submit
+              vim.fn.chansend(claude_channel, table.concat(prompt, '\n') .. '\n')
             end)
 
             if success then
