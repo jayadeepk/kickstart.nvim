@@ -204,9 +204,10 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.wo.number = false
       vim.wo.signcolumn = 'no'
       vim.wo.list = false
-      -- Store the Claude terminal buffer and channel
+      -- Store the Claude terminal buffer, channel, and window
       local claude_buf = vim.api.nvim_get_current_buf()
       local claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
+      local claude_win = vim.api.nvim_get_current_win()
       -- Resize vertical split: left 50%, right 50%
       vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
       vim.cmd 'startinsert'
@@ -239,12 +240,14 @@ vim.api.nvim_create_autocmd('VimEnter', {
           if #prompt > 0 then
             local success = pcall(function()
               vim.fn.chansend(claude_channel, table.concat(prompt, '\n'))
-              vim.fn.chansend(claude_channel, '\n')
+              vim.fn.chansend(claude_channel, '\r')
             end)
 
             if success then
               print('Jira prompt sent to Claude terminal')
               vim.fn.delete(prompt_file)
+              -- Switch focus to Claude terminal window
+              vim.api.nvim_set_current_win(claude_win)
             else
               print('Failed to send prompt, retrying in 5 seconds... (attempt ' .. attempt .. '/' .. max_attempts .. ')')
               vim.defer_fn(function()
