@@ -239,8 +239,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
           local prompt = vim.fn.readfile(prompt_file)
           if #prompt > 0 then
             local success = pcall(function()
-              -- Send the prompt text followed by Enter to submit
-              vim.fn.chansend(claude_channel, table.concat(prompt, '\n') .. '\n')
+              -- Send the prompt text (without trailing newline)
+              vim.fn.chansend(claude_channel, table.concat(prompt, '\n'))
             end)
 
             if success then
@@ -248,6 +248,10 @@ vim.api.nvim_create_autocmd('VimEnter', {
               vim.fn.delete(prompt_file)
               -- Switch focus to Claude terminal window
               vim.api.nvim_set_current_win(claude_win)
+              -- Send Enter key to submit the prompt
+              vim.schedule(function()
+                vim.api.nvim_input('<CR>')
+              end)
             else
               print('Failed to send prompt, retrying in 5 seconds... (attempt ' .. attempt .. '/' .. max_attempts .. ')')
               vim.defer_fn(function()
