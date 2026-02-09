@@ -929,7 +929,7 @@ require('lazy').setup({
       -- Configure Tokyo Night
       style = 'night', -- The theme comes in four styles: `storm`, `moon`, `night` and `day`
       light_style = 'day', -- The theme is used when the background is set to light
-      transparent = false, -- Enable this to disable setting the background color
+      transparent = true, -- Enable this to disable setting the background color
       terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
       styles = {
         -- Style to be applied to different syntax groups
@@ -954,7 +954,11 @@ require('lazy').setup({
 
       --- You can override specific highlights to use other groups or a hex color
       --- function will be called with a Highlights and ColorScheme table
-      on_highlights = function(highlights, colors) end,
+      on_highlights = function(highlights, colors)
+        -- Set Normal background opacity to 90% (blend=10)
+        highlights.Normal = { blend = 10 }
+        highlights.NormalNC = { blend = 10 }
+      end,
     },
   },
 
