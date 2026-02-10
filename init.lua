@@ -918,8 +918,29 @@ require('lazy').setup({
       -- Create autocommand to switch when background changes
       vim.api.nvim_create_autocmd('OptionSet', {
         pattern = 'background',
-        callback = set_tokyonight_variant,
-        desc = 'Switch Tokyo Night variant when background changes',
+        callback = function()
+          set_tokyonight_variant()
+          -- Update statusline colors after colorscheme switch
+          vim.schedule(function()
+            local statusline_bg
+            if vim.o.background == 'light' then
+              statusline_bg = 0xe0e0e8
+            else
+              statusline_bg = 0x1d1d27
+            end
+            vim.api.nvim_set_hl(0, 'MiniStatuslineDevinfo', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineFileinfo', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineFilename', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineInactive', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommand', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeOther', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { bg = statusline_bg })
+          end)
+        end,
+        desc = 'Switch Tokyo Night variant and update statusline when background changes',
       })
 
       -- You can configure highlights by doing something like:
@@ -958,8 +979,17 @@ require('lazy').setup({
         -- Set Normal background opacity to 90% (blend=10)
         highlights.Normal = { blend = 10 }
         highlights.NormalNC = { blend = 10 }
-        -- Set statusline to 90% Tokyo Night + 10% #333333 (simulating the transparent effect)
-        local statusline_bg = 0x1d1d27  -- Blended color that matches the semi-transparent background
+
+        -- Set statusline background to match editor background in both light and dark modes
+        local statusline_bg
+        if vim.o.background == 'light' then
+          -- Light mode: use Tokyo Night Day background color
+          statusline_bg = 0xe0e0e8  -- Light background that matches day theme
+        else
+          -- Dark mode: use blended dark color
+          statusline_bg = 0x1d1d27  -- Blended color that matches the semi-transparent background
+        end
+
         highlights.MiniStatuslineDevinfo = { bg = statusline_bg }
         highlights.MiniStatuslineFileinfo = { bg = statusline_bg }
         highlights.MiniStatuslineFilename = { bg = statusline_bg }
