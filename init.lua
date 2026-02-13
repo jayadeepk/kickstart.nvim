@@ -922,22 +922,24 @@ require('lazy').setup({
           set_tokyonight_variant()
           -- Update statusline colors after colorscheme switch
           vim.schedule(function()
-            local statusline_bg
+            local statusline_fg
             if vim.o.background == 'light' then
-              statusline_bg = 0xe0e0e8
+              statusline_fg = 0x3d3d54  -- Dark text for light mode
             else
-              statusline_bg = 0x1d1d27
+              statusline_fg = 0xc0caf5  -- Light text for dark mode
             end
-            vim.api.nvim_set_hl(0, 'MiniStatuslineDevinfo', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineFileinfo', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineFilename', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineInactive', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommand', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeOther', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { bg = statusline_bg })
-            vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { bg = statusline_bg })
+            vim.api.nvim_set_hl(0, 'Statusline', { bg = 'NONE' })
+            vim.api.nvim_set_hl(0, 'StatuslineNC', { bg = 'NONE' })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineDevinfo', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineFileinfo', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineFilename', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineInactive', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommand', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeOther', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { bg = 'NONE', fg = statusline_fg })
+            vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { bg = 'NONE', fg = statusline_fg })
           end)
         end,
         desc = 'Switch Tokyo Night variant and update statusline when background changes',
@@ -976,30 +978,32 @@ require('lazy').setup({
       --- You can override specific highlights to use other groups or a hex color
       --- function will be called with a Highlights and ColorScheme table
       on_highlights = function(highlights, colors)
-        -- Set Normal background opacity to 90% (blend=10)
-        highlights.Normal = { blend = 10 }
-        highlights.NormalNC = { blend = 10 }
+        -- Set Normal background opacity to 10% (blend=90)
+        highlights.Normal = { blend = 90 }
+        highlights.NormalNC = { blend = 90 }
 
-        -- Set statusline background to match editor background in both light and dark modes
-        local statusline_bg
+        -- Set statusline foreground colors only (no background, allows transparency)
+        local statusline_fg
         if vim.o.background == 'light' then
-          -- Light mode: use Tokyo Night Day background color
-          statusline_bg = 0xe0e0e8  -- Light background that matches day theme
+          -- Light mode: dark text
+          statusline_fg = 0x3d3d54
         else
-          -- Dark mode: use blended dark color
-          statusline_bg = 0x1d1d27  -- Blended color that matches the semi-transparent background
+          -- Dark mode: light text
+          statusline_fg = 0xc0caf5
         end
 
-        highlights.MiniStatuslineDevinfo = { bg = statusline_bg }
-        highlights.MiniStatuslineFileinfo = { bg = statusline_bg }
-        highlights.MiniStatuslineFilename = { bg = statusline_bg }
-        highlights.MiniStatuslineInactive = { bg = statusline_bg }
-        highlights.MiniStatuslineModeCommand = { bg = statusline_bg }
-        highlights.MiniStatuslineModeInsert = { bg = statusline_bg }
-        highlights.MiniStatuslineModeNormal = { bg = statusline_bg }
-        highlights.MiniStatuslineModeOther = { bg = statusline_bg }
-        highlights.MiniStatuslineModeReplace = { bg = statusline_bg }
-        highlights.MiniStatuslineModeVisual = { bg = statusline_bg }
+        highlights.Statusline = { bg = 'NONE' }
+        highlights.StatuslineNC = { bg = 'NONE' }
+        highlights.MiniStatuslineDevinfo = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineFileinfo = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineFilename = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineInactive = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeCommand = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeInsert = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeNormal = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeOther = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeReplace = { bg = 'NONE', fg = statusline_fg }
+        highlights.MiniStatuslineModeVisual = { bg = 'NONE', fg = statusline_fg }
       end,
     },
   },
