@@ -44,4 +44,8 @@ return {
     lazy = true,
     ft = { "sql", "mysql", "plsql" },
   },
+  {
+    "numToStr/comment.nvim",
+    opts = {},
+  },
 }
