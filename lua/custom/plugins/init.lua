@@ -46,6 +46,19 @@ return {
   },
   {
     "numToStr/comment.nvim",
-    opts = {},
+    config = function()
+      require("Comment").setup()
+      local ft = require("Comment.ft")
+      -- Configure MySQL/SQL comment strings
+      ft.set("mysql", { "-- %s", "/* %s */" })
+      ft.set("sql", { "-- %s", "/* %s */" })
+      -- Fallback: set commentstring via autocmd for MySQL files
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "mysql,sql",
+        callback = function()
+          vim.bo.commentstring = "-- %s"
+        end,
+      })
+    end,
   },
 }

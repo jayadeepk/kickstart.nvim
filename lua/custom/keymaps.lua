@@ -214,3 +214,12 @@ vim.keymap.set('n', '<leader>cl', function()
     print 'Claude terminal not found'
   end
 end, { desc = '[C]laude send relative file path' })
+
+-- Toggle comments with Ctrl+/
+vim.keymap.set('n', '<C-/>', function()
+  require('Comment.api').toggle.linewise.current()
+end, { desc = 'Toggle line comment' })
+
+vim.keymap.set('v', '<C-/>', function()
+  require('Comment.api').toggle.linewise(vim.fn.visualmode())
+end, { desc = 'Toggle line comment' })
