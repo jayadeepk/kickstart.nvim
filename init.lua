@@ -924,9 +924,9 @@ require('lazy').setup({
           vim.schedule(function()
             local statusline_fg
             if vim.o.background == 'light' then
-              statusline_fg = 0x1f1f2e  -- Darker text for light mode
+              statusline_fg = 0x3d3630  -- Warm dark text for light mode
             else
-              statusline_fg = 0x565f89  -- Darker text for dark mode
+              statusline_fg = 0x9d8fa3  -- Warm dark text for dark mode
             end
             vim.api.nvim_set_hl(0, 'Statusline', { bg = 'NONE' })
             vim.api.nvim_set_hl(0, 'StatuslineNC', { bg = 'NONE' })
