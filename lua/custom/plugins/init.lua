@@ -19,6 +19,22 @@ return {
       -- Set the save location for dadbod queries and connections
       vim.g.db_ui_save_location = os.getenv("HOME") .. "/.local/share/db_ui"
     end,
+    config = function()
+      -- Enable line wrapping for SQL query editor, but not for results
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "sql,mysql,plsql",
+        callback = function(args)
+          -- Check if this is a results buffer (dbout) or editor buffer
+          local buf_name = vim.api.nvim_buf_get_name(args.buf)
+          if buf_name:match("dbout") or buf_name:match("query_output") then
+            vim.opt_local.wrap = false
+          else
+            -- This is the editor buffer, enable wrapping
+            vim.opt_local.wrap = true
+          end
+        end,
+      })
+    end,
   },
   {
     "kristijanhusak/vim-dadbod-completion",
