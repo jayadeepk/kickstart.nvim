@@ -204,7 +204,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.wo.number = false
       vim.wo.signcolumn = 'no'
       vim.wo.list = false
-      -- Split to the right and create claude terminal
+      -- Split to the right and create claude terminal (middle)
       vim.cmd 'vsplit'
       vim.cmd 'terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
@@ -214,10 +214,16 @@ vim.api.nvim_create_autocmd('VimEnter', {
       local claude_buf = vim.api.nvim_get_current_buf()
       local claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
       local claude_win = vim.api.nvim_get_current_win()
-      -- Resize vertical split: left 50%, right 50%
-      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.5))
+      -- Split to the right and create right terminal
+      vim.cmd 'vsplit'
+      vim.cmd 'terminal'
+      vim.wo.number = false
+      vim.wo.signcolumn = 'no'
+      vim.wo.list = false
+      -- Resize vertical split: left 33%, middle 33%, right 33%
+      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.33))
       vim.cmd 'startinsert'
-      -- Move back to left window for focus
+      -- Move back to Claude terminal window (middle) for focus
       vim.cmd 'wincmd h'
 
       -- Check for .jira-prompt file and send to Claude terminal
