@@ -69,6 +69,12 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+-- Enable global statusline (required for horizontal split separators)
+vim.o.laststatus = 3
+
+-- Configure separator characters for splits
+vim.opt.fillchars:append { vert = '│', horiz = '─' }
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
