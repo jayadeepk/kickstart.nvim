@@ -199,12 +199,12 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
-      -- Create left terminal
+      -- Create left-top terminal
       vim.cmd 'terminal'
       vim.wo.number = false
       vim.wo.signcolumn = 'no'
       vim.wo.list = false
-      -- Split to the right and create claude terminal (middle)
+      -- Vertical split to the right for claude terminal (middle)
       vim.cmd 'vsplit'
       vim.cmd 'terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
       vim.wo.number = false
@@ -214,16 +214,34 @@ vim.api.nvim_create_autocmd('VimEnter', {
       local claude_buf = vim.api.nvim_get_current_buf()
       local claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
       local claude_win = vim.api.nvim_get_current_win()
-      -- Split to the right and create right terminal
+      -- Vertical split to the right for right-top terminal
       vim.cmd 'vsplit'
       vim.cmd 'terminal'
       vim.wo.number = false
       vim.wo.signcolumn = 'no'
       vim.wo.list = false
-      -- Resize vertical split: left 33%, middle 33%, right 33%
-      vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.33))
+      -- Move to left-top and split horizontally for left-bottom
+      vim.cmd 'wincmd h'
+      vim.cmd 'wincmd h'
+      vim.cmd 'split'
+      vim.cmd 'terminal'
+      vim.wo.number = false
+      vim.wo.signcolumn = 'no'
+      vim.wo.list = false
+      -- Resize left-bottom to 50% height
+      vim.cmd('resize ' .. math.floor(vim.o.lines * 0.5))
+      -- Move to right-top and split horizontally for right-bottom
+      vim.cmd 'wincmd l'
+      vim.cmd 'wincmd l'
+      vim.cmd 'split'
+      vim.cmd 'terminal'
+      vim.wo.number = false
+      vim.wo.signcolumn = 'no'
+      vim.wo.list = false
+      -- Resize right-bottom to 50% height
+      vim.cmd('resize ' .. math.floor(vim.o.lines * 0.5))
       vim.cmd 'startinsert'
-      -- Move back to Claude terminal window (middle) for focus
+      -- Move to Claude terminal window (middle) for focus
       vim.cmd 'wincmd h'
 
       -- Check for .jira-prompt file and send to Claude terminal
