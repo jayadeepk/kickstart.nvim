@@ -114,9 +114,15 @@ vim.keymap.set('t', '<C-q>', '<C-\\><C-n><cmd>qa<CR>', { desc = 'Quit all from t
 -- Open terminal in vertical split and switch to insert mode
 vim.keymap.set('n', '<C-t>', '<cmd>vsplit | terminal<CR>i', { desc = 'Open terminal in vertical split and enter insert mode' })
 
--- Open terminal in vertical split and run claude command, then horizontal split with normal terminal
+-- Open terminal in vertical split and run AI command, then horizontal split with normal terminal
 vim.keymap.set('n', '<C-Space>', function()
-  vim.cmd 'vsplit | terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+  local ai_cmd
+  if vim.fn.getenv 'NVIM_AI_TOOL' == 'codex' then
+    ai_cmd = 'codex --dangerously-bypass-approvals-and-sandbox'
+  else
+    ai_cmd = 'source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+  end
+  vim.cmd('vsplit | terminal ' .. ai_cmd)
   -- Resize vertical split: left 60%, right 40%
   vim.cmd('vertical resize ' .. math.floor(vim.o.columns * 0.4))
   vim.cmd 'split | terminal'

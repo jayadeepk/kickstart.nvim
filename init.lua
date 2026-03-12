@@ -199,6 +199,13 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     -- Only run if no files were passed as arguments
     if vim.fn.argc() == 0 then
+      local ai_cmd
+      if vim.fn.getenv 'NVIM_AI_TOOL' == 'codex' then
+        ai_cmd = 'codex --dangerously-bypass-approvals-and-sandbox'
+      else
+        ai_cmd = 'source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+      end
+
       local claude_buf, claude_channel, claude_win
 
       if vim.o.columns >= 280 then
@@ -210,7 +217,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
         vim.wo.list = false
         -- Vertical split to the right for claude terminal (middle)
         vim.cmd 'vsplit'
-        vim.cmd 'terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+        vim.cmd('terminal ' .. ai_cmd)
         vim.wo.number = false
         vim.wo.signcolumn = 'no'
         vim.wo.list = false
@@ -249,8 +256,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
         vim.cmd 'wincmd h'
       else
         -- Narrow layout (right 2/3rds): 3 terminals
-        -- Claude terminal on the left
-        vim.cmd 'terminal source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+        -- AI terminal on the left
+        vim.cmd('terminal ' .. ai_cmd)
         vim.wo.number = false
         vim.wo.signcolumn = 'no'
         vim.wo.list = false
