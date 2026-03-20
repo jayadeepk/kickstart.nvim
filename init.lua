@@ -225,32 +225,12 @@ vim.api.nvim_create_autocmd('VimEnter', {
         claude_buf = vim.api.nvim_get_current_buf()
         claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
         claude_win = vim.api.nvim_get_current_win()
-        -- Vertical split to the right for right-top terminal
+        -- Vertical split to the right for right terminal
         vim.cmd 'vsplit'
         vim.cmd 'terminal'
         vim.wo.number = false
         vim.wo.signcolumn = 'no'
         vim.wo.list = false
-        -- Move to left-top and split horizontally for left-bottom
-        vim.cmd 'wincmd h'
-        vim.cmd 'wincmd h'
-        vim.cmd 'split'
-        vim.cmd 'terminal'
-        vim.wo.number = false
-        vim.wo.signcolumn = 'no'
-        vim.wo.list = false
-        -- Resize left-bottom to 50% height
-        vim.cmd('resize ' .. math.floor(vim.o.lines * 0.5))
-        -- Move to right-top and split horizontally for right-bottom
-        vim.cmd 'wincmd l'
-        vim.cmd 'wincmd l'
-        vim.cmd 'split'
-        vim.cmd 'terminal'
-        vim.wo.number = false
-        vim.wo.signcolumn = 'no'
-        vim.wo.list = false
-        -- Resize right-bottom to 50% height
-        vim.cmd('resize ' .. math.floor(vim.o.lines * 0.5))
         vim.cmd 'startinsert'
         -- Move to Claude terminal window (middle) for focus
         vim.cmd 'wincmd h'
@@ -265,20 +245,12 @@ vim.api.nvim_create_autocmd('VimEnter', {
         claude_buf = vim.api.nvim_get_current_buf()
         claude_channel = vim.api.nvim_buf_get_option(claude_buf, 'channel')
         claude_win = vim.api.nvim_get_current_win()
-        -- Vertical split to the right for top terminal
+        -- Vertical split to the right for right terminal
         vim.cmd 'vsplit'
         vim.cmd 'terminal'
         vim.wo.number = false
         vim.wo.signcolumn = 'no'
         vim.wo.list = false
-        -- Split horizontally for bottom terminal
-        vim.cmd 'split'
-        vim.cmd 'terminal'
-        vim.wo.number = false
-        vim.wo.signcolumn = 'no'
-        vim.wo.list = false
-        -- Resize bottom-right to 50% height
-        vim.cmd('resize ' .. math.floor(vim.o.lines * 0.5))
         vim.cmd 'startinsert'
         -- Move to Claude terminal window (left) for focus
         vim.cmd 'wincmd h'
