@@ -1165,19 +1165,20 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    config = function()
-      require('nvim-treesitter.config').setup({
-        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'javascript', 'typescript' },
-        -- Autoinstall languages that are not installed
-        auto_install = true,
-        highlight = {
-          enable = true,
-          -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-          --  If you are experiencing weird indenting issues, add the language to
-          --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-          additional_vim_regex_highlighting = { 'ruby' },
-        },
-        indent = { enable = true, disable = { 'ruby' } },
+    opts = {
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'javascript', 'typescript' },
+      -- Autoinstall languages that are not installed
+      auto_install = true,
+    },
+    config = function(_, opts)
+      require('nvim-treesitter').setup(opts)
+
+      -- Treesitter-based highlighting and indentation are now handled by Neovim natively.
+      -- Enable them via vim.treesitter:
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(ev)
+          pcall(vim.treesitter.start, ev.buf)
+        end,
       })
     end,
     -- There are additional nvim-treesitter modules that you can use to interact
