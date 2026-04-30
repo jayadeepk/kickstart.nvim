@@ -203,7 +203,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
       if vim.fn.getenv 'NVIM_AI_TOOL' == 'codex' then
         ai_cmd = 'codex --dangerously-bypass-approvals-and-sandbox'
       else
-        ai_cmd = 'source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+        ai_cmd = 'source ~/.zshrc && nvm use 24 && claude --dangerously-skip-permissions'
       end
 
       local claude_buf, claude_channel, claude_win

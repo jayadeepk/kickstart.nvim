@@ -120,7 +120,7 @@ vim.keymap.set('n', '<C-Space>', function()
   if vim.fn.getenv 'NVIM_AI_TOOL' == 'codex' then
     ai_cmd = 'codex --dangerously-bypass-approvals-and-sandbox'
   else
-    ai_cmd = 'source ~/.zshrc && nvm use 22 && claude --dangerously-skip-permissions'
+    ai_cmd = 'source ~/.zshrc && nvm use 24 && claude --dangerously-skip-permissions'
   end
   vim.cmd('vsplit | terminal ' .. ai_cmd)
   -- Resize vertical split: left 60%, right 40%
